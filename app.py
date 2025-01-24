@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import sqlite3
 
 app = Flask(__name__)
@@ -33,6 +33,15 @@ def get_data():
     rows = c.fetchall()
     conn.close()
     return jsonify(rows)
+
+@app.route('/')
+def index():
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM data')
+    rows = c.fetchall()
+    conn.close()
+    return render_template('index.html', rows=rows)
 
 if __name__ == '__main__':
     init_db()
